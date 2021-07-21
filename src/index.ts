@@ -1,12 +1,14 @@
 import { Helper } from "../src/helper/helper"
 import { Type } from "../src/type/type"
+import { v4 as uuidv4 } from 'uuid';
 
 class OriginalInputHandler {
     private char_limit: number
-
+    private uuid_en: Map<any, string>
 
     constructor() {
         this.char_limit = 4500
+        this.uuid_en = new Map()
         var original_element = document.getElementById("original") as HTMLInputElement;
         this.showResult(original_element);
     }
@@ -29,17 +31,29 @@ class OriginalInputHandler {
         if (converted_element) {
             converted_element.replaceWith(doc.documentElement)
         }
+        console.log(this.uuid_en)
     }
 
     private content_to_uuid(element: Element) {
         if (element.children.length > 0) {
+            if (element.tagName == "P" || element.tagName == "LI") {
+                const content = element.textContent
+
+                if (content) {
+                    const uuid = uuidv4()
+                    this.uuid_en.set(uuid, content)
+                    element.textContent = uuid
+                }
+            }
             for (var i = 0; i < element.children.length; i++) {
                 this.content_to_uuid(element.children[i])
             }
         } else {
             const content = element.textContent
             if (content) {
-                element.textContent = "HELLO"
+                const uuid = uuidv4()
+                this.uuid_en.set(uuid, content)
+                element.textContent = uuid
             }
         }
     }
