@@ -3,8 +3,8 @@ import { Type } from "../src/type/type"
 import { v4 as uuidv4 } from 'uuid';
 
 class OriginalInputHandler {
-    private uuid_en: Map<string, string>
-    private uuid_ja: Map<string, string>
+    private uuid_en: Map<Type.uuid, string>
+    private uuid_ja: Map<Type.uuid, string>
     private uuid_index: Array<string>
     private newline_replace: string
 
@@ -48,7 +48,7 @@ class OriginalInputHandler {
 
     }
 
-    private translated_text_to_map(translated_str: string): Map<string, string> {
+    private translated_text_to_map(translated_str: string): Map<Type.uuid, string> {
         const list = translated_str.split('\n')
         var map = new Map()
         for (var i = 0; i < list.length; i++) {
@@ -59,7 +59,7 @@ class OriginalInputHandler {
         return map
     }
 
-    private uuid_list_to_string(uuid_list: Map<any, string>): string {
+    private uuid_list_to_string(uuid_list: Map<Type.uuid, string>): string {
         var str = ""
         uuid_list.forEach((v, k) => {
             this.uuid_index.push(k)
@@ -69,50 +69,31 @@ class OriginalInputHandler {
     }
 
 
-    private content_to_uuid(element: Element): Element {
-        var convered_to_uuid_element = element
-        if (convered_to_uuid_element.children.length > 0) {
-            if (convered_to_uuid_element.tagName == "P" || convered_to_uuid_element.tagName == "LI") {
-                const content = convered_to_uuid_element.textContent
-
-                if (content) {
-                    const uuid = uuidv4()
-                    this.uuid_en.set(uuid, content)
-                    convered_to_uuid_element.textContent = content.replace('\n', this.newline_replace)
-                    convered_to_uuid_element.textContent = uuid
-                }
-            }
-            for (var i = 0; i < convered_to_uuid_element.children.length; i++) {
-                this.content_to_uuid(convered_to_uuid_element.children[i])
-            }
+    private content_to_uuid(node: Node): Node {
+        var temp_node = node.cloneNode()
+        if (temp_node.hasChildNodes()) {
+            temp_node.childNodes.forEach(node => {
+                temp_node = this.content_to_uuid(node)
+            })
         } else {
-            const content = convered_to_uuid_element.textContent
+            const content = temp_node.textContent
             if (content) {
                 const uuid = uuidv4()
                 this.uuid_en.set(uuid, content)
-                convered_to_uuid_element.textContent = content.replace('\n', this.newline_replace)
-                convered_to_uuid_element.textContent = uuid
+                temp_node.textContent = content.replace('\n', this.newline_replace)
+                temp_node.textContent = uuid
             }
         }
-        return convered_to_uuid_element
+
+        return temp_node
     }
 
-    private content_from_uuid(element: Element, map: Map<string, string>): Element {
-        var translated_docment = element
-        if (translated_docment.children.length > 0) {
-            if (translated_docment.tagName == "P" || translated_docment.tagName == "LI") {
-                const content = translated_docment.textContent
-
-                if (content) {
-                    const value = map.get(content)
-                    if (value) {
-                        translated_docment.textContent = value
-                    }
-                }
-            }
-            for (var i = 0; i < translated_docment.children.length; i++) {
-                this.content_to_uuid(translated_docment.children[i])
-            }
+    private content_from_uuid(node: Node, map: Map<Type.uuid, string>): Node {
+        var translated_docment = node.cloneNode()
+        if (translated_docment.hasChildNodes()) {
+            translated_docment.childNodes.forEach(node => {
+                translated_docment = this.content_from_uuid(node, map)
+            })
         } else {
             const content = translated_docment.textContent
             if (content) {

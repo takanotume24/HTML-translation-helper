@@ -1,4 +1,3 @@
 export module Type {
-    export type strings = string[]
-    export type columns = strings[]
+    export type uuid = string
 }
