@@ -21,7 +21,7 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a href="#" class="navbar-brand">📄📚 Paper Translation Helper 📚📄</a>
+                <a href="#" class="navbar-brand">📄📚 HTML Translation Helper 📚📄</a>
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto"></ul>>
                     <ul class="navbar-nav">
@@ -51,11 +51,15 @@
             </div>
         </nav>
         <div class="form-group">
-            <label for="original">Input / 入力</label>
+            <label for="original">Original HTML / 入力</label>
             <textarea id="original" autofocus="autofocus" class="form-control"
+                placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+            <label for="translated">Translated Text / 入力</label>
+            <textarea id="translated" autofocus="autofocus" class="form-control"
                 placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
         </div>
         <div class="list-group">
+            <label id="original-string-list">元のファイルに含まれる翻訳するべき文字列</label>
             <label id="converted">Output / 出力</label>
         </div>
 
