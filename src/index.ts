@@ -17,60 +17,46 @@ class OriginalInputHandler {
     }
 
 
-
     private showResult(original_element: HTMLInputElement) {
-        const char_limit_element = document.getElementById("char_limit") as HTMLInputElement
-        this.char_limit = Number(char_limit_element.value)
-        if (this.char_limit < 1000) {
-            this.char_limit = 1000
-            char_limit_element.value = "1000"
+        const domparser = new DOMParser()
+        var doc = domparser.parseFromString(original_element.value, "text/html")
+
+        this.show_content(doc.documentElement)
+        this.content_to_uuid(doc.documentElement)
+        this.show_content(doc.documentElement)
+        const converted_element = document.getElementById("converted")
+
+        if (converted_element) {
+            converted_element.replaceWith(doc.documentElement)
         }
-
-        var converted_element = document.getElementById("converted");
-        if (!converted_element) {
-            return;
-        }
-
-        var source = original_element.value;
-        if (!source) {
-            return
-        }
-        source = source.replace(/-\n/g, "")
-        source = source.replace(/\n/g, " ")
-        source = source.replace(/- /g, "")
-        source = source.replace(/Fig\. /g, "Fig.")
-        source = source.replace(/No\. /g, "No.")
-        source = source.replace(/Prof\. /g, "Prof.")
-        source = source.replace(/Eq\. /g, "Eq.")
-        source = source.replace(/et al\. /g, "et al.")
-        source = source.replace(/Dr\. /g, "Dr.")
-        source = source.replace(/e\.g\. /g, "e.g.")
-        source = source.replace(/\.[\d+](?= [A-Z])/g, "[$&]. ") //for "Neurology"
-        source = source.replace(/\.[\d+,]+[\d+](?= [A-Z])/g, "[$&]. ") //for "Neurology"
-        source = source.replace(/\.[\d+]–[\d+](?= [A-Z])/g, "[$&]. ") //for "Neurology", "–" is dash
-
-        const strings = source.split(". ").map(str => `${str}.\n`)
-        var results: Type.columns = this.split_array(strings)
-
-        converted_element.innerHTML = this.show_boxes(results)
     }
 
-    private show_boxes(stringss: Type.columns): string {
-        var result = ""
-        var i = 0
-        stringss.forEach(strings => {
-            result += this.in_box(strings.join(""), i++)
-        })
-        return result
+    private content_to_uuid(element: Element) {
+        if (element.children.length > 0) {
+            for (var i = 0; i < element.children.length; i++) {
+                this.content_to_uuid(element.children[i])
+            }
+        } else {
+            const content = element.textContent
+            if (content) {
+                element.textContent = "HELLO"
+            }
+        }
     }
-    private in_box(string: string, column_num: number): string {
-        const text_area_id = `"text_area_${column_num}"`
-        return `<li class="list-group-item">
-            <label for=${text_area_id}>
-                No.${column_num}, Number of characters : ${string.length}
-            </label>
-            <textarea class="form-control" id=${text_area_id}>${string}</textarea></li>`
+
+    private show_content(element: Element) {
+        if (element.children.length > 0) {
+            for (var i = 0; i < element.children.length; i++) {
+                this.show_content(element.children[i])
+            }
+        } else {
+            const content = element.textContent
+            if (content) {
+                console.log(content)
+            }
+        }
     }
+
 
     private split_array(strings: Type.strings): Type.columns {
 
