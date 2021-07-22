@@ -8,16 +8,19 @@ class OriginalInputHandler {
     constructor() {
         this.newline_replace = uuidv4()
         var original_element = document.getElementById("original_textarea") as HTMLInputElement;
-        this.showResult(original_element);
+        var translated_textarea = document.getElementById("translated_textarea") as HTMLInputElement
+
+        this.showResult(original_element, translated_textarea);
     }
 
     public doWork = () => {
         var original_element = document.getElementById("original_textarea") as HTMLInputElement;
-        this.showResult(original_element);
+        var translated_textarea = document.getElementById("translated_textarea") as HTMLInputElement
+        this.showResult(original_element, translated_textarea);
     }
 
 
-    private showResult(original_element: HTMLInputElement) {
+    private showResult(original_element: HTMLInputElement, translated_textarea: HTMLInputElement) {
         const domparser = new DOMParser()
         const doc = domparser.parseFromString(original_element.value, "text/html")
         var en_set = new Set<string>()
@@ -25,28 +28,22 @@ class OriginalInputHandler {
         const converted_textarea = document.getElementById("converted_textarea")
         const translated_html = document.getElementById("translated_html")
 
-        // if (converted_textarea) {
-        //     converted_textarea.replaceWith(doc.documentElement)
-        // }
-        console.log(en_set)
         if (!converted_textarea) return null
         converted_textarea.textContent = this.set_to_textarea(en_set)
 
-        const translated_textarea = document.getElementById("translated_textarea");
-        if (!translated_textarea) return null
-
-        console.log(translated_textarea.textContent)
+        console.log(translated_textarea.value)
         var map = this.translated_text_to_map(translated_textarea, converted_textarea)
         console.log(map)
+
         if (!map) return null
         this.content_from_map(doc.documentElement, map)
         translated_html?.replaceWith(doc.documentElement)
     }
 
-    private translated_text_to_map(translated_element: HTMLElement, original_element: HTMLElement): Map<string, string> {
+    private translated_text_to_map(translated_element: HTMLInputElement, original_element: HTMLElement): Map<string, string> {
         var map = new Map<string, string>()
         const original_str = original_element.textContent
-        const translated_str = translated_element.textContent
+        const translated_str = translated_element.value
         if (!original_str) {
             map.set("original_str", "null")
             return map
@@ -85,7 +82,6 @@ class OriginalInputHandler {
             })
         } else {
             const content = node.textContent
-            // const content = node.textContent?.replace('\n', this.newline_replace)
             if (content) {
                 set.add(content)
             }
