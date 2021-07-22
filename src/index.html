@@ -54,14 +54,14 @@
         <div class="container">
             <div class="form-group">
                 <div class="original">
-                    <label for="original_label">Original HTML / 入力</label>
+                    <label for="original_label">手順1: 翻訳したいWebページのHTMLをここに貼り付けてください．</label>
                     <textarea id="original_textarea" autofocus="autofocus" class="form-control"
                         placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="converted">
-                    <label id="converted_textarea_label">元のファイルに含まれる翻訳するべき文字列</label>
+                    <label id="converted_textarea_label">手順2: ここに表示されている文字列をそのまま翻訳ソフトウェアで翻訳してください．</label>
                     <textarea id="converted_textarea" class="form-control" readonly></textarea>
                     <button class="btn btn-outline-primary" data-clipboard-target="#converted_textarea">
                         クリップボードにコピー
@@ -70,7 +70,7 @@
             </div>
             <div class="form-group">
                 <div class="translated">
-                    <label for="translated_label">翻訳結果をここに貼り付けてください</label>
+                    <label for="translated_label">手順3: 翻訳結果をここに貼り付けてください</label>
                     <textarea id="translated_textarea" class="form-control"
                         placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
                 </div>
