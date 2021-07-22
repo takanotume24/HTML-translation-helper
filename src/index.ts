@@ -76,8 +76,8 @@ class OriginalInputHandler {
     private content_to_set(node: Node, set: Set<string>): Set<string> {
         if (node.hasChildNodes()) {
             node.childNodes.forEach(node => {
-                if (node.nodeName == "script") {
-
+                if (node.nodeName == "SCRIPT") {
+                    return
                 }
                 this.content_to_set(node, set)
             })
