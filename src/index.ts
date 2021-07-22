@@ -25,11 +25,11 @@ class OriginalInputHandler {
         const doc = domparser.parseFromString(original_element.value, "text/html")
         var en_set = new Set<string>()
         en_set = this.content_to_set(doc.documentElement, en_set)
-        const converted_textarea = document.getElementById("converted_textarea")
-        const translated_html = document.getElementById("translated_html")
+        const converted_textarea = document.getElementById("converted_textarea") as HTMLInputElement
+        const translated_html = document.getElementById("translated_html") as HTMLParagraphElement
 
         if (!converted_textarea) return null
-        converted_textarea.textContent = this.set_to_textarea(en_set)
+        converted_textarea.value = this.set_to_textarea(en_set)
 
         console.log(translated_textarea.value)
         var map = this.translated_text_to_map(translated_textarea, converted_textarea)
@@ -37,12 +37,12 @@ class OriginalInputHandler {
 
         if (!map) return null
         this.content_from_map(doc.documentElement, map)
-        translated_html?.replaceWith(doc.documentElement)
+        translated_html.replaceWith(doc.documentElement)
     }
 
-    private translated_text_to_map(translated_element: HTMLInputElement, original_element: HTMLElement): Map<string, string> {
+    private translated_text_to_map(translated_element: HTMLInputElement, converted_element: HTMLInputElement): Map<string, string> {
         var map = new Map<string, string>()
-        const original_str = original_element.textContent
+        const original_str = converted_element.value
         const translated_str = translated_element.value
         if (!original_str) {
             map.set("original_str", "null")
