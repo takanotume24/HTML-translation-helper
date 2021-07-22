@@ -84,7 +84,9 @@ class OriginalInputHandler {
         } else {
             const content = node.textContent
             if (content) {
-                set.add(content.replace('\n', ''))
+                if (content.trim().length > 0) {
+                    set.add(content.replace('\n', ''))
+                }
             }
         }
         return set
