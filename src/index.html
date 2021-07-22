@@ -15,6 +15,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 </head>
 
 <body>
@@ -50,28 +51,38 @@
                 </div>
             </div>
         </nav>
-        <div class="form-group">
-            <div class="original">
-                <label for="original_label">Original HTML / 入力</label>
-                <textarea id="original_textarea" autofocus="autofocus" class="form-control"
-                    placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+        <div class="container">
+            <div class="form-group">
+                <div class="original">
+                    <label for="original_label">Original HTML / 入力</label>
+                    <textarea id="original_textarea" autofocus="autofocus" class="form-control"
+                        placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+                </div>
             </div>
-            <div class="converted">
-                <label id="converted_textarea_label">元のファイルに含まれる翻訳するべき文字列</label>
-                <textarea id="converted_textarea" class="form-control" readonly></textarea>
+            <div class="form-group">
+                <div class="converted">
+                    <label id="converted_textarea_label">元のファイルに含まれる翻訳するべき文字列</label>
+                    <textarea id="converted_textarea" class="form-control" readonly></textarea>
+                    <button class="btn btn-outline-primary" data-clipboard-target="#converted_textarea">
+                        クリップボードにコピー
+                    </button>
+                </div>
             </div>
-
-            <div class="translated">
-                <label for="translated_label">翻訳結果をここに貼り付けてください</label>
-                <textarea id="translated_textarea" class="form-control"
-                    placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+            <div class="form-group">
+                <div class="translated">
+                    <label for="translated_label">翻訳結果をここに貼り付けてください</label>
+                    <textarea id="translated_textarea" class="form-control"
+                        placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+                </div>
+            </div>
+            <div class="translated_html">
+                <p id="translated_html"></p>
             </div>
         </div>
-        <div class="translated_html">
-            <p id="translated_html"></p>
-        </div>
+    </div>
 
-        <script src="./index.ts"></script>
+
+    <script src="./index.ts"></script>
     </div>
 </body>
 

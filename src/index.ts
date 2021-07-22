@@ -1,9 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
+import ClipboardJS = require('clipboard');
 
 class OriginalInputHandler {
     private newline_replace: string
 
     constructor() {
+        new ClipboardJS('.btn')
         this.newline_replace = uuidv4()
         var original_element = document.getElementById("original_textarea") as HTMLInputElement;
         var translated_textarea = document.getElementById("translated_textarea") as HTMLInputElement
