@@ -37,7 +37,8 @@ class OriginalInputHandler {
 
         if (!map) return null
         this.content_from_map(doc.documentElement, map)
-        translated_html.replaceWith(doc.documentElement)
+        translated_html.innerHTML = ''
+        translated_html.appendChild(doc.documentElement)
     }
 
     private translated_text_to_map(translated_element: HTMLInputElement, converted_element: HTMLInputElement): Map<string, string> {
@@ -83,7 +84,7 @@ class OriginalInputHandler {
         } else {
             const content = node.textContent
             if (content) {
-                set.add(content)
+                set.add(content.replace('\n', ''))
             }
         }
         return set
