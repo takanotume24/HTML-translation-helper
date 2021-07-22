@@ -7,12 +7,12 @@ class OriginalInputHandler {
 
     constructor() {
         this.newline_replace = uuidv4()
-        var original_element = document.getElementById("original") as HTMLInputElement;
+        var original_element = document.getElementById("original_textarea") as HTMLInputElement;
         this.showResult(original_element);
     }
 
     public doWork = () => {
-        var original_element = document.getElementById("original") as HTMLInputElement;
+        var original_element = document.getElementById("original_textarea") as HTMLInputElement;
         this.showResult(original_element);
     }
 
@@ -20,80 +20,87 @@ class OriginalInputHandler {
     private showResult(original_element: HTMLInputElement) {
         const domparser = new DOMParser()
         const doc = domparser.parseFromString(original_element.value, "text/html")
-        const translated_element = document.getElementById("translated") as HTMLInputElement;
-        var en_uuid = new Map()
-        var uuid_index = new Array()
-        en_uuid = this.content_to_uuid(doc.documentElement, en_uuid)
-        const converted_element = document.getElementById("converted")
-        const original_string_element = document.getElementById("original-string-list")
+        var en_set = new Set<string>()
+        en_set = this.content_to_set(doc.documentElement, en_set)
+        const converted_textarea = document.getElementById("converted_textarea")
+        const translated_html = document.getElementById("translated_html")
 
-        // if (converted_element) {
-        //     converted_element.replaceWith(doc.documentElement)
+        // if (converted_textarea) {
+        //     converted_textarea.replaceWith(doc.documentElement)
         // }
-        console.log(en_uuid)
+        console.log(en_set)
+        if (!converted_textarea) return null
+        converted_textarea.textContent = this.set_to_textarea(en_set)
 
-        if (original_string_element) {
-            original_string_element.innerHTML = this.uuid_list_to_textarea(en_uuid, uuid_index)
-        }
-        console.log(uuid_index)
-        if (translated_element) {
-            const uuid_ja = this.translated_text_to_map(translated_element.value, uuid_index)
-            this.content_from_uuid(doc.documentElement, uuid_ja)
-            converted_element?.replaceWith(doc.documentElement)
-        }
+        const translated_textarea = document.getElementById("translated_textarea");
+        if (!translated_textarea) return null
 
-
+        console.log(translated_textarea.textContent)
+        var map = this.translated_text_to_map(translated_textarea, converted_textarea)
+        console.log(map)
+        if (!map) return null
+        this.content_from_map(doc.documentElement, map)
+        translated_html?.replaceWith(doc.documentElement)
     }
 
-    private translated_text_to_map(translated_str: string, uuid_index: Array<Type.uuid>): Map<Type.uuid, string> {
-        const list = translated_str.split('\n')
-        var map = new Map()
-        for (var i = 0; i < list.length; i++) {
-            list[i] = list[i].replace(this.newline_replace, '\n')
-            map.set(uuid_index[i], list[i])
+    private translated_text_to_map(translated_element: HTMLElement, original_element: HTMLElement): Map<string, string> {
+        var map = new Map<string, string>()
+        const original_str = original_element.textContent
+        const translated_str = translated_element.textContent
+        if (!original_str) {
+            map.set("original_str", "null")
+            return map
         }
+        if (!translated_str) {
+            map.set("translated_str", "null")
+            return map
+        }
+        const original_list = original_str.split('\n')
+        const translated_list = translated_str.split('\n')
+
+        original_list?.forEach((v, i) => {
+            map.set(v, translated_list[i])
+        })
 
         return map
     }
 
-    private uuid_list_to_textarea(uuid_list: Map<Type.uuid, string>, uuid_index: Array<Type.uuid>): string {
+    private set_to_textarea(set: Set<string>): string {
+
         var str = ""
-        uuid_list.forEach((v, k) => {
-            uuid_index.push(k)
+        set.forEach((v) => {
             str += v + "\n"
         })
-        return `<textarea class="form-control" id=${1}>${str}</textarea></li>`
+        return str
     }
 
 
-    private content_to_uuid(node: Node, map: Map<Type.uuid, string>): Map<Type.uuid, string> {
+    private content_to_set(node: Node, set: Set<string>): Set<string> {
         if (node.hasChildNodes()) {
             node.childNodes.forEach(node => {
                 if (node.nodeName == "script") {
 
                 }
-                this.content_to_uuid(node, map)
+                this.content_to_set(node, set)
             })
         } else {
             const content = node.textContent
             // const content = node.textContent?.replace('\n', this.newline_replace)
             if (content) {
-                if (content === '\n') return map
-                const uuid = uuidv4()
-                map.set(uuid, content)
-                node.textContent = uuid
+                set.add(content)
             }
         }
-        return map
+        return set
     }
 
-    private content_from_uuid(node: Node, map: Map<Type.uuid, string>) {
+    private content_from_map(node: Node, map: Map<string, string>) {
         if (node.hasChildNodes()) {
             node.childNodes.forEach(node => {
-                this.content_from_uuid(node, map)
+                this.content_from_map(node, map)
             })
         } else {
             const content = node.textContent
+
             if (content) {
                 const value = map.get(content)
                 if (value) {
@@ -108,6 +115,6 @@ class OriginalInputHandler {
 
 window.onload = () => {
     var handler = new OriginalInputHandler();
-    document.getElementById("original")?.addEventListener("input", handler.doWork);
-    document.getElementById("translated")?.addEventListener("input", handler.doWork);
+    document.getElementById("original_textarea")?.addEventListener("input", handler.doWork);
+    document.getElementById("translated_textarea")?.addEventListener("input", handler.doWork);
 };

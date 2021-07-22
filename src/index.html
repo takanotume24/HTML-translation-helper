@@ -51,16 +51,24 @@
             </div>
         </nav>
         <div class="form-group">
-            <label for="original">Original HTML / 入力</label>
-            <textarea id="original" autofocus="autofocus" class="form-control"
-                placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
-            <label for="translated">Translated Text / 入力</label>
-            <textarea id="translated" autofocus="autofocus" class="form-control"
-                placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+            <div class="original">
+                <label for="original_label">Original HTML / 入力</label>
+                <textarea id="original_textarea" autofocus="autofocus" class="form-control"
+                    placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+            </div>
+            <div class="converted">
+                <label id="converted_textarea_label">元のファイルに含まれる翻訳するべき文字列</label>
+                <textarea id="converted_textarea" class="form-control"></textarea>
+            </div>
+
+            <div class="translated">
+                <label for="translated_label">Translated Text / 入力</label>
+                <textarea id="translated_textarea" autofocus="autofocus" class="form-control"
+                    placeholder="Paste Here. / ここに貼り付けてください。"></textarea>
+            </div>
         </div>
-        <div class="list-group">
-            <label id="original-string-list">元のファイルに含まれる翻訳するべき文字列</label>
-            <label id="converted">Output / 出力</label>
+        <div class="translated_html">
+            <p id="translated_html"></p>
         </div>
 
         <script src="./index.ts"></script>
