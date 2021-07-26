@@ -74,7 +74,7 @@ class OriginalInputHandler {
 
 
     private content_to_set(node: Node, set: Set<string>): Set<string> {
-        if (node.hasChildNodes()) {
+        if (node.hasChildNodes() && node.nodeName != "P" && node.nodeName != "LI") {
             node.childNodes.forEach(node => {
                 if (node.nodeName == "SCRIPT") {
                     return
@@ -93,12 +93,12 @@ class OriginalInputHandler {
     }
 
     private content_from_map(node: Node, map: Map<string, string>) {
-        if (node.hasChildNodes()) {
+        if (node.hasChildNodes() && node.nodeName != "P" && node.nodeName != "LI") {
             node.childNodes.forEach(node => {
                 this.content_from_map(node, map)
             })
         } else {
-            const content = node.textContent
+            const content = node.textContent?.replace('\n', '')
 
             if (content) {
                 const value = map.get(content)
